@@ -29,6 +29,8 @@ body {
 
 .panel.master {
 	width: 100%;
+	justify-content: space-between;
+	align-content: center;
 	padding: 1em;
 	margin: 0 0 2em;
 	border-radius: 0;
@@ -69,8 +71,11 @@ body {
 .optionSelector {
 	display: flex;
 	flex-wrap: nowrap;
-	align-items: center;
   	justify-content: center;
+}
+
+.midi-input {
+	margin-top: 0.5em;
 }
 
 .midi-input span {
@@ -242,6 +247,14 @@ body {
 
 .recording-player {
 	display: flex;
+	align-content: center;
+}
+
+.recording-player span{
+	display: inline-block;
+	font-size: 0.8em;
+	margin: 0.5em 1em 0 0;
+	color: #FFF;
 }
 
 .recording-player .button {

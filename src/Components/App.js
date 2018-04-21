@@ -138,8 +138,10 @@ class App extends Component {
         }            
 
         let recordClass = "record button gradient";
+        let recordTxt = ""
         if(this.state.recording){
             recordClass = "active record button gradient";
+            recordTxt = <span>Recording...</span>;
         }
         if(this.state.audioSrc && !this.state.recording){
              audioComponent = <AudioPlayer src={this.state.audioSrc} />;
@@ -155,12 +157,13 @@ class App extends Component {
                             options={inputs} 
                             handleChange={ this.handleMidiInputSelect } />
                     </div>
-                </div>
-                <div className="synth">
                     <div className="recording-player">
-                        <button onClick={this.handleRecord} className={recordClass} />
+                        {recordTxt}
+                        <button title="Record" onClick={this.handleRecord} className={recordClass} />
                         {audioComponent}
                     </div>
+                </div>
+                <div className="synth">
                     <ControlPanel osc={this.osc}  />
                     <Keyboard notes={this.state.notes} handleNote={ this.handleNote } />  
                 </div>
