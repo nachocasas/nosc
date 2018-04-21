@@ -239,3 +239,60 @@ body {
 .keyboard ul li:last-child {
 	border-radius: 0 5px 5px 5px;
 }
+
+.recording-player {
+	display: flex;
+}
+
+.recording-player .button {
+	width: 2.2em;
+	height: 2em;
+	border:0;
+	background: url(/images/simple-player-buttons.svg)  no-repeat;
+	background-size: 22em 22em;
+}
+
+
+.recording-player .button.record {
+	background-position: 0 -9em;
+}
+
+.recording-player .button.record.active {
+	background-position: 0 -11em;
+}
+
+.recording-player .button.play {
+	background-position: -2.3em -9em;
+}
+
+.recording-player .button.play.active {
+	background-position: -2.3em -11em;
+}
+
+.recording-player .button.stop {
+	background-position: -7em -9em;
+}
+
+.recording-player .button.stop:active {
+	background-position: -7em -11em;
+}
+
+
+.recording-player .button.loop {
+	background-position: -11.5em -9em;
+}
+
+.recording-player .button.loop.active {
+	background-position: -11.5em -11em;
+}
+
+.recording-player .button.download {
+	background-position: -9.2em -9em;
+}
+
+.recording-player .button.download:active {
+	background-position: -9.2em -11em;
+}
+
+/*+++++ Audio Player ++++++*/
+

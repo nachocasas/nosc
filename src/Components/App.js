@@ -4,36 +4,37 @@ import Knob from './Knob';
 import { getMidiToFreqArray } from '../Helpers/MidiHelper';
 import WebMidi from 'webmidi';
 import AudioContext from '../Classes/AudioContext';
+import SynthOscillator from '../Classes/SynthOscillator';
 
-
-import Synth from './Synth';
+import ControlPanel from './ControlPanel';
+import Keyboard from './Keyboard';
 import OptionSelector from './OptionSelector';
+import AudioPlayer from './AudioPlayer';
 
 class App extends Component {
 
     constructor(props){
         super(props);
 
-        const ac = new AudioContext();
-        const master = ac.createGain()
-        const recorderDest = ac.createMediaStreamDestination();
-        const mediaRecorder = new MediaRecorder(recorderDest.stream);
+        this.ac = new AudioContext();
+        const master = this.ac.createGain()
        
+        this.osc = new SynthOscillator(this.ac, master);
+        
         //master.connect(ac.destination);
         
         this.state = {
             midiIsEnabled : false,
-            audioContext : ac,
             master : master,
             volume : 50,
             input : "",
-            recording : { mediaRecorder, recorderDest }
+            recording : false,
+            audioSrc : null
         }
 
         WebMidi.enable((err) => {
             
             if(!err && WebMidi.inputs.length > 0){
-                console.log(WebMidi.inputs[0].id)
                 this.setState({
                     midiIsEnabled : true,
                     input : WebMidi.inputs[0]
@@ -43,7 +44,10 @@ class App extends Component {
 
     }
 
-    
+    componentDidUpdate(){
+        this.removeListeners();
+        this.addListeners();
+    }
 
     handleMidiInputSelect = (event) => {
         if(event.target.value == ""){
@@ -58,16 +62,91 @@ class App extends Component {
         this.setState({ volume });
     };
 
+     
+
+    handleNote = (action, note = null) => {
+        const synthOsc = this.osc;
+        const currentNotes = synthOsc.notes || [];
+        switch(action){
+            case 'play':
+                synthOsc.play(note, null)
+            break;
+            case 'stop':
+                synthOsc.stop(note, null)
+            break;
+            case 'stopAll':
+                synthOsc.stopAllNodes();
+            break;
+        }
+
+        this.setState({ notes: synthOsc.notes });
+
+    }
+
+
+    removeListeners = () => {
+        const input = this.state.input;
+        if(input){
+            input.removeListener('noteon', 'all');
+            input.removeListener('noteoff', 'all');
+        }
+    }
+
+    addListeners = () => {
+        const synthOsc = this.osc
+        const input = this.state.input;
+        const self = this;
+        const mediaRecorder = this.mediaRecorder;
+
+        let chunks = [];
+      
+        if(input){
+            input.addListener('noteon', "all",
+                function (e) {
+                    synthOsc.play(e.note.number, e.rawVelocity)
+                    self.setState({ notes: synthOsc.notes });
+                });
+            
+            input.addListener('noteoff', "all",
+                function (e) {
+                    synthOsc.stop(e.note.number);
+                     self.setState({ notes: synthOsc.notes });
+                }
+            );
+        }
+    }
+
+    handleRecord = (e) => {
+        if(!this.state.recording){
+            this.osc.record = true;
+            this.osc.startRecording((src) => {
+                this.setState({ audioSrc: src, recording : false })
+            });
+            this.setState({ recording : true })
+        } else {
+            this.osc.stopRecording();
+        }
+    }
+
+
     render(){
         let inputs = []
+        let audioComponent = <div />;
+
         if(this.state.midiIsEnabled){
             inputs = WebMidi.inputs;
         }            
 
+        let recordClass = "record button gradient";
+        if(this.state.recording){
+            recordClass = "active record button gradient";
+        }
+        if(this.state.audioSrc && !this.state.recording){
+             audioComponent = <AudioPlayer src={this.state.audioSrc} />;
+        }
         return (
             <div className='app-container'>
                 <div className="panel master">
-                    
                     <div className="control midi-input">
                         <OptionSelector 
                             emptyNode={true} 
@@ -76,15 +155,18 @@ class App extends Component {
                             options={inputs} 
                             handleChange={ this.handleMidiInputSelect } />
                     </div>
-                    
                 </div>
-                <Synth audioContext = { this.state.audioContext } input = { this.state.input } 
-                recorder = { this.state.recording } master = { this.state.master }
-                 />
+                <div className="synth">
+                    <div className="recording-player">
+                        <button onClick={this.handleRecord} className={recordClass} />
+                        {audioComponent}
+                    </div>
+                    <ControlPanel osc={this.osc}  />
+                    <Keyboard notes={this.state.notes} handleNote={ this.handleNote } />  
+                </div>
             </div>
         );
-        }
+    }
 }
-
 
 export default App;

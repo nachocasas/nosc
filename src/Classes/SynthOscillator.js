@@ -12,6 +12,8 @@ export default class SynthOscillator {
         this.context = context;
         this.master = master;
         this.midiTable = getMidiToFreqArray();
+        this.recorderDest = this.context.createMediaStreamDestination();
+        this.mediaRecorder = new MediaRecorder(this.recorderDest.stream);
         this._velocityFlag = false;
         this._waveType = OSC_TYPES[0].name;
         this._notes = {};
@@ -22,6 +24,7 @@ export default class SynthOscillator {
         this.lfoOn = true;
         this.lfo = null;
         this.lfoFrequency = 4;
+        this.recordSrc = null;
     }
 
     play(noteNumber, velocity = null){
@@ -56,8 +59,7 @@ export default class SynthOscillator {
             )
         }
         if(this.record){
-            console.log(this.recordDest);
-            gainNode.connect(this.recordDest);
+            gainNode.connect(this.recorderDest);
         }
         oscNode.start(ac.currentTime);
         this.setNotes(noteNumber, { oscNode , gainNode, lfoNode });
@@ -83,11 +85,26 @@ export default class SynthOscillator {
         }
     }
 
-    startRecording({ mediaRecorder, recorderDest }){
-        this.mediaRecorder = mediaRecorder;
-        this.recordDest = recorderDest;
+    startRecording(onStopCallback){
+        this.initRecordingEvents(onStopCallback);
         this.record = true;
-        mediaRecorder.start();
+        this.mediaRecorder.start();
+    }
+
+    initRecordingEvents(onStopCallback){
+        let chunks = [];
+        this.mediaRecorder.ondataavailable = (evt) => {
+            // push each chunk (blobs) in an array
+            chunks.push(evt.data);
+          };
+     
+        this.mediaRecorder.onstop = (evt) => {
+            // Make blob out of our blobs, and open it.
+            const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+            const recordSrc = URL.createObjectURL(blob);
+            onStopCallback(recordSrc)
+          };
+
     }
 
     stopRecording(){
@@ -104,7 +121,6 @@ export default class SynthOscillator {
     modulateLfo(val){
         this.lfoFrequency = val;
         for (let note in this.notes) {
-            console.log(note);
             let { lfoNode } = this.notes[note];
             lfoNode.frequency.setValueAtTime(val, this.context.currentTime);
         };
@@ -152,7 +168,6 @@ export default class SynthOscillator {
     set waveType(waveType){
         const oscTypes = OSC_TYPES.map(item => item.name);
         if(oscTypes.indexOf(waveType) !== -1){
-            console.log(waveType);
             this._waveType = waveType;
         }
     }
