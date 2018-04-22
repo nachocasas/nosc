@@ -130,7 +130,7 @@ export default class Keyboard extends Component {b
                     <button onClick={() => this.handleStartNoteChange(true) }>&gt;</button>
                     <div className="octave-selector">
                         <span>Octaves: </span>
-                        {this.renderOctaveSelector()};
+                        {this.renderOctaveSelector()}
                     </div>
                 </div>
                 <div className='keyboard' ref={elem => this.keyboardNode = elem}>

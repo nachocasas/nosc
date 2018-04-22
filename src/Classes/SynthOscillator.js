@@ -14,6 +14,7 @@ export default class SynthOscillator {
         this.midiTable = getMidiToFreqArray();
         this.recorderDest = this.context.createMediaStreamDestination();
         this.mediaRecorder = new MediaRecorder(this.recorderDest.stream);
+        this.analyser = this.context.createAnalyser();
         this._velocityFlag = false;
         this._waveType = OSC_TYPES[0].name;
         this._notes = {};
@@ -47,9 +48,10 @@ export default class SynthOscillator {
         
         gainNode.gain.setValueAtTime(0.00001, ac.currentTime);
         //gainNode.connect(this.master);
+        gainNode.connect( this.analyser);
         gainNode.connect(ac.destination);
 
-        if(!this.velocityFlag){
+        if(!this.velocityFlag){ 
             gainNode.gain.exponentialRampToValueAtTime(
                 0.6, ac.currentTime + this.fadeIn
             )

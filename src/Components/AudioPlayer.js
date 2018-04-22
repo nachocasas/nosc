@@ -11,7 +11,7 @@ class AudioPlayer extends Component {
             loop : false,
             play : false
         };
-        
+
         this.addListeners();
     }
 
@@ -31,7 +31,7 @@ class AudioPlayer extends Component {
 
     handleStop = (e) => {
         this.audio.pause()
-        this.audio.position = 0;
+        this.audio.currentTime = 0;
         this.setState( { play : false });
     }
 
