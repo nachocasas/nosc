@@ -149,7 +149,7 @@ class ControlPanel extends Component {
                                     valueTransformDisplay={(val) => _.floor(val, 2)}
                                     showNumber={true}
                                     />
-                                    <span>fade in</span>
+                                    <span>Attack (inv)</span>
                             </div>
                             
                             <div className="control knob">
@@ -163,7 +163,7 @@ class ControlPanel extends Component {
                                     valueTransformDisplay={(val) => _.floor(val, 2)}
                                     showNumber={true}
                                     />
-                                    <span>fade out</span>
+                                    <span>Decay</span>
                             </div>
                             <div className="control knob">
                                 <Knob

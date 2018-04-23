@@ -1,7 +1,11 @@
 {
   "name": "nosc",
   "version": "0.0.1",
-  "description": "",
+  "description": "A fun oscillator made in react",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nachocasas/nosc"
+  },
   "main": "src/index.js",
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --mode development",
@@ -14,6 +18,7 @@
     "react": "^16.3.1",
     "react-canvas-knob": "^0.5.0",
     "react-dom": "^16.3.1",
+    "react-modal": "^3.4.2",
     "react-touch-knob": "^0.2.3",
     "web-midi-api": "^1.4.4",
     "webmidi": "^2.0.4"

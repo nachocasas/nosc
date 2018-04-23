@@ -5,14 +5,14 @@
 
 
 html {
-	height: 100%;
+	height: 100vh;
 }
 body {
-    height: 100%;
+    height: 100vh;
     margin: 0;
     background-repeat: no-repeat;
 	background-attachment: fixed;
-	background: linear-gradient(45deg, rgb(26, 26, 26) 10%, rgb(54, 54, 54) 100%) !important;
+	background: linear-gradient(45deg, rgb(26, 26, 26) 10%, rgb(54, 54, 54) 100%);
 }
 
 #container {
@@ -21,19 +21,71 @@ body {
 	font-family: 'Gugi', cursive;
 }
 
+.ReactModal__Overlay {
+	z-index: 9999;
+}
+
+.ReactModal__Content{
+	top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+	bottom: auto !important;
+	width: 45em;
+	padding: 2em !important;
+    margin-right: -50% !important;
+	transform: translate(-50%, -50%) !important;
+	border-radius: 10px !important;
+	overflow: visible !important;
+	
+
+	h2 {
+		margin-bottom: 0.7em;
+		border-bottom: 2px solid #EEE;
+		padding-bottom: 10px;
+	}
+}
+
+.ReactModal__Content button {
+	position: absolute;
+	top:-10px;
+	right: -10px;
+	width: 25px;
+	height: 25px;
+	border: 0;
+	outline: 0;
+	border-radius: 25px;
+	background: url('/images/times-circle.svg') no-repeat;
+	background-color: #FFF;
+	cursor: pointer;
+}
+
+.instructions {
+	h3 {
+		font-size: 1.5em;
+
+	}
+	ul {
+		padding: 1em 2em 2em 2em;
+		font-size: 0.9em;
+	}
+	li {
+		margin-bottom: 1em;
+	}
+}
+
 .panel {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-between;
 	max-width: 66em;
 	margin: 0.5em 0;
-	padding: 1em 0 1em 2em;
+	padding: 1.5em 2em 1em 2em;
 	box-shadow: 0 0 50px rgba(0, 0, 0, 0.5) inset, 0 1px rgba(212, 152, 125, 0.2) inset, 0 5px 15px rgba(0, 0, 0, 0.5);
 	background: linear-gradient(45deg, rgb(26, 26, 26) 10%, rgb(54, 54, 54) 100%) !important;
 	border-radius: 10px;
 
 	&.master {
 		width: 100%;
-		justify-content: space-between;
 		align-content: center;
 		padding: 1em;
 		margin: 0 0 2em;
@@ -44,12 +96,17 @@ body {
 		
 	}
 
+	.instructions-button{
+		margin-left: 0.5em;
+	}
+
 	.control{
 		font-size: 0.8em;
 
 		&.knob {
 			font-size: 0.8em;
-			width: 10em;
+			text-align: center;
+			
 
 			.label {
 				font-size: 0.7em;
@@ -73,6 +130,8 @@ body {
 
 	.controls-wrapper {
 		display: flex;
+		padding: 0 2em 0 0;
+		justify-content: space-between;
 	}
 }
 
@@ -98,6 +157,7 @@ body {
 
 .midi-input {
 	margin-top: 0.5em;
+	display:flex;
 
 	span {
 		width: 8em;

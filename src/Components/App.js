@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Knob from './Knob';
+import Modal from 'react-modal';
 
 import { getMidiToFreqArray } from '../Helpers/MidiHelper';
 import WebMidi from 'webmidi';
@@ -13,6 +14,8 @@ import AudioPlayer from './AudioPlayer';
 
 // SCSS
 require('../sass/style.scss');
+
+Modal.setAppElement('#container')
 
 class App extends Component {
 
@@ -32,7 +35,8 @@ class App extends Component {
             volume : 50,
             input : "",
             recording : false,
-            audioSrc : null
+            audioSrc : null,
+            modalIsOpen: false
         }
 
         WebMidi.enable((err) => {
@@ -50,6 +54,15 @@ class App extends Component {
     componentDidUpdate(){
         this.removeListeners();
         this.addListeners();
+    }
+
+    openModal = () => {
+        this.setState({modalIsOpen: true});
+    }
+ 
+    
+    closeModal = () => {
+        this.setState({modalIsOpen: false});
     }
 
     handleMidiInputSelect = (event) => {
@@ -150,25 +163,54 @@ class App extends Component {
              audioComponent = <AudioPlayer src={this.state.audioSrc} />;
         }
         return (
-            <div className='app-container'>
-                <div className="panel master">
-                    <div className="control midi-input">
-                        <OptionSelector 
-                            emptyNode={true} 
-                            title="MIDI Input" 
-                            value={this.state.input.id}
-                            options={inputs} 
-                            handleChange={ this.handleMidiInputSelect } />
+            <div>
+                <div className='app-container'>
+                    <div className="panel master">
+                        <div className="control midi-input">
+                            <OptionSelector 
+                                emptyNode={true} 
+                                title="MIDI Input" 
+                                value={this.state.input.id}
+                                options={inputs} 
+                                handleChange={ this.handleMidiInputSelect } />
+
+                            <button className="instructions-button" onClick={this.openModal}>?</button>
+                            <Modal
+                            isOpen={this.state.modalIsOpen}
+                            onRequestClose={this.closeModal}
+                            contentLabel="Instructions"
+                            >
+                                <h2 ref={subtitle => this.subtitle = subtitle}>How to play</h2>
+                                <button onClick={this.closeModal} />
+                                <div className="instructions">
+                                    <h3>Inputs:</h3>
+                                    <ul>
+                                        <li><strong>Midi Keyboard</strong>: Just plug your midi device and refresh the page, then select the correct device from
+                                            the "MIDI input" list at the top.
+                                        </li>
+                                        <li>
+                                        <strong>Keyboard</strong>: You can use the normal keyboard. White keys are on the Z row, and black keys on the A row <br/>
+                                            <i>Whites</i>: (z,x,c,v,b,n,m)<br/>
+                                            <i>Blacks</i>: (s,d,f,h,j)
+                                        </li>
+                                        <li>
+                                        <strong>Mouse</strong>: You can play using your mouse! (but you'll be able to play one note at a time only)
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Modal>
+                        </div>
+                        
+                        <div className="recording-player">
+                            {recordTxt}
+                            <button title="Record" onClick={this.handleRecord} className={recordClass} />
+                            {audioComponent}
+                        </div>
                     </div>
-                    <div className="recording-player">
-                        {recordTxt}
-                        <button title="Record" onClick={this.handleRecord} className={recordClass} />
-                        {audioComponent}
+                    <div className="synth">
+                        <ControlPanel osc={this.osc}  />
+                        <Keyboard notes={this.state.notes} handleNote={ this.handleNote } />  
                     </div>
-                </div>
-                <div className="synth">
-                    <ControlPanel osc={this.osc}  />
-                    <Keyboard notes={this.state.notes} handleNote={ this.handleNote } />  
                 </div>
             </div>
         );
