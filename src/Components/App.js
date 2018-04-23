@@ -11,6 +11,9 @@ import Keyboard from './Keyboard';
 import OptionSelector from './OptionSelector';
 import AudioPlayer from './AudioPlayer';
 
+// SCSS
+require('../sass/style.scss');
+
 class App extends Component {
 
     constructor(props){
