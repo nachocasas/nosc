@@ -126,10 +126,15 @@ class ControlPanel extends Component {
 
         return (
                 <div className="panel">
-                    <div className="control waveform-selector">
-                        <ul>
-                            {this.renderTypes()}
-                        </ul>
+                    <div className="waveform-logo">
+                        <div className="control waveform-selector">
+                            <ul>
+                                {this.renderTypes()}
+                            </ul>
+                        </div>
+                        <div className="logo">
+                            <h1>NOsc <sub>0.1</sub></h1>
+                        </div>
                     </div>
                     <div className="control-visualization">
                         <div className="controls-wrapper">

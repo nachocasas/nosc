@@ -1,3 +1,9 @@
+/*
+	Stylesheet for NOSC
+	Author: Ignacio Casas.
+*/
+
+
 html {
     height: 100%;
 }
@@ -12,7 +18,7 @@ body {
 #container {
 	width:70em;
 	padding: 0 2em 2em 2em;
-	font-family: Courier New, Courier, monospace;
+	font-family: 'Gugi', cursive;
 	
 }
 
@@ -70,6 +76,20 @@ body {
 
 .panel .controls-wrapper {
 	display: flex;
+}
+
+.logo{
+	font-family: 'Russo One', sans-serif;
+}
+
+.logo h1 {
+	font-size: 3.5em;
+	color: #000;
+	
+}
+
+.logo sub {
+	font-size:0.4em;
 }
 
 .optionSelector {
@@ -334,3 +354,13 @@ body {
 
 /*+++++ Audio Player ++++++*/
 
+footer {
+	font-size: 0.8em;
+	color: #CCC;
+	text-align: center;
+}
+footer a,
+footer a:active,
+footer a:visited {
+	color:#FFF;
+}
